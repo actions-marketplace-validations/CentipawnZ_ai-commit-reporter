@@ -18,6 +18,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run AI Commit Reporter Action
+        id: ai-reporter
         uses: ./
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -25,3 +26,16 @@ jobs:
           llm-base-url: ${{ secrets.LLM_BASE_URL }}
           llm-model: ${{ secrets.LLM_MODEL }}
           llm-api-key: ${{ secrets.LLM_API_KEY }}
+
+      - name: Send Telegram Notification
+        if: ${{ steps.ai-reporter.outputs.report != '' }}
+        uses: CentipawnZ/telegram-action@main
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
+          topic_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
+          format: 'Markdown'
+          message: |
+            🤖 *AI Commit Report*
+
+            ${{ steps.ai-reporter.outputs.report }}
