@@ -34537,6 +34537,7 @@ Here is the list of categorized commits:
 {{grouped_commits}}
 
 Generate a beautiful, professional, and well-structured release report.
+Write the final report in the following language: {{locale}}.
 `;
 function groupCommits(commits) {
   const categories = {
@@ -34587,7 +34588,7 @@ async function generateReport(commits, options) {
   const rawCommitList = commits.map((c) => `- ${c.split("\n")[0]}`).join("\n");
   const groupedCommitList = groupCommits(commits);
   const template = options.customPrompt || DEFAULT_PROMPT;
-  const prompt = template.replace("{{commits}}", rawCommitList).replace("{{grouped_commits}}", groupedCommitList);
+  const prompt = template.replace("{{commits}}", rawCommitList).replace("{{grouped_commits}}", groupedCommitList).replace("{{locale}}", options.locale || "English");
   const provider = options.provider.toLowerCase();
   if (provider === "openai" || provider === "custom") {
     const config = { apiKey: options.apiKey };
@@ -34619,6 +34620,7 @@ async function run() {
     const llmModel = getInput("llm-model");
     const llmBaseUrl = getInput("llm-base-url");
     const customPrompt = getInput("prompt-template");
+    const locale = getInput("locale");
     const outputMode = getInput("output-mode");
     const octokit = getOctokit(token);
     const context3 = context2;
@@ -34651,7 +34653,8 @@ async function run() {
       apiKey: llmApiKey,
       model: llmModel,
       baseUrl: llmBaseUrl,
-      customPrompt
+      customPrompt,
+      locale
     });
     setOutput("report", report);
     if (outputMode === "pr_comment" && context3.eventName === "pull_request") {

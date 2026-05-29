@@ -20,6 +20,10 @@ inputs:
   llm-base-url:
     description: "Custom Base URL (useful for custom OpenAI-compatible endpoints)"
     required: false
+  locale:
+    description: "Language of the generated report (e.g., English, Vietnamese, Chinese, Japanese, Korean)"
+    required: false
+    default: "English"
   prompt-template:
     description: "Custom prompt template. Available variables: {{commits}}"
     required: false

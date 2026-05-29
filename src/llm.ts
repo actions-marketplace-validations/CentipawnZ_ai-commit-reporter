@@ -9,6 +9,7 @@ Here is the list of categorized commits:
 {{grouped_commits}}
 
 Generate a beautiful, professional, and well-structured release report.
+Write the final report in the following language: {{locale}}.
 `;
 
 export interface LlmOptions {
@@ -17,6 +18,7 @@ export interface LlmOptions {
   model?: string;
   baseUrl?: string;
   customPrompt?: string;
+  locale?: string;
 }
 
 function groupCommits(commits: string[]): string {
@@ -80,10 +82,11 @@ export async function generateReport(
 
   const template = options.customPrompt || DEFAULT_PROMPT;
   
-  // Hỗ trợ cả 2 biến {{commits}} và {{grouped_commits}}
+  // Hỗ trợ cả các biến {{commits}}, {{grouped_commits}}, và {{locale}}
   const prompt = template
     .replace('{{commits}}', rawCommitList)
-    .replace('{{grouped_commits}}', groupedCommitList);
+    .replace('{{grouped_commits}}', groupedCommitList)
+    .replace('{{locale}}', options.locale || 'English');
 
   const provider = options.provider.toLowerCase();
 
