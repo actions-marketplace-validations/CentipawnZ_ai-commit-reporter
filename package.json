@@ -1,10 +1,10 @@
 {
   "name": "ai-commit-reporter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Summarize commit messages and generate reports using LLMs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "esbuild src/index.ts --bundle --platform=node --target=node20 --outfile=dist/index.js"
   },
   "keywords": [
@@ -26,9 +26,12 @@
     "openai": "^6.39.1"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^25.9.1",
     "@vercel/ncc": "^0.38.4",
     "esbuild": "^0.28.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
     "typescript": "^6.0.3"
   }
 }
