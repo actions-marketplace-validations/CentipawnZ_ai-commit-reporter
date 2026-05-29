@@ -1,6 +1,6 @@
 {
   "name": "ai-commit-reporter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Summarize commit messages and generate reports using LLMs",
   "main": "index.js",
   "scripts": {

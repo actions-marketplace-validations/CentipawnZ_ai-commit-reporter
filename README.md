@@ -41,16 +41,16 @@ jobs:
 
 ## Inputs
 
-| Name              | Description                                              | Required | Default            |
-| ----------------- | -------------------------------------------------------- | -------- | ------------------ |
-| `github-token`    | GitHub token for reading commits and commenting          | Yes      | N/A                |
-| `llm-provider`    | LLM provider to use (`openai`, `gemini`, or `custom`)    | Yes      | `openai`           |
-| `llm-api-key`     | API Key for the chosen provider                          | Yes      | N/A                |
-| `llm-model`       | Model to use (e.g., `gpt-4o`, `gemini-1.5-flash`)        | No       | provider default   |
-| `llm-base-url`    | Custom Base URL for OpenAI-compatible endpoints          | No       | N/A                |
-| `locale`          | Language of the generated report (e.g., `Vietnamese`)    | No       | `English`          |
-| `prompt-template` | Custom prompt for the AI. Use `{{commits}}` or `{{grouped_commits}}` | No      | Built-in template  |
-| `output-mode`     | Where to output the report (`pr_comment`)                | Yes      | `pr_comment`       |
+| Name              | Description                                                              | Required | Default            |
+| ----------------- | ------------------------------------------------------------------------ | -------- | ------------------ |
+| `github-token`    | GitHub token for reading commits and commenting                          | Yes      | N/A                |
+| `llm-provider`    | LLM provider to use (`openai`, `gemini`, or `custom`)                    | Yes      | `openai`           |
+| `llm-api-key`     | API Key for the chosen provider                                          | Yes      | N/A                |
+| `llm-model`       | Model to use (e.g., `gpt-4o`, `gemini-1.5-flash`)                        | No       | provider default   |
+| `llm-base-url`    | Custom Base URL for OpenAI-compatible endpoints                          | No       | N/A                |
+| `locale`          | Language of the generated report                                         | No       | `English`          |
+| `prompt-template` | Custom prompt for the AI. Use `{{commits}}` or `{{grouped_commits}}`     | No       | Built-in template  |
+| `output-mode`     | Where to output the report (`pr_comment`)                                | Yes      | `pr_comment`       |
 
 ## Outputs
 

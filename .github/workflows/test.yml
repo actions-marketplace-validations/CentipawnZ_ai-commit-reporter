@@ -26,6 +26,7 @@ jobs:
           llm-base-url: ${{ secrets.LLM_BASE_URL }}
           llm-model: ${{ secrets.LLM_MODEL }}
           llm-api-key: ${{ secrets.LLM_API_KEY }}
+          locale: "Vietnamese"
 
       - name: Send Telegram Notification
         if: ${{ steps.ai-reporter.outputs.report != '' }}
@@ -34,7 +35,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           topic_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
-          format: 'Markdown'
+          format: "Markdown"
           message: |
             🤖 *AI Commit Report*
 
