@@ -48,7 +48,7 @@ jobs:
 | `llm-api-key`     | API Key for the chosen provider                          | Yes      | N/A                |
 | `llm-model`       | Model to use (e.g., `gpt-4o`, `gemini-1.5-flash`)        | No       | provider default   |
 | `llm-base-url`    | Custom Base URL for OpenAI-compatible endpoints          | No       | N/A                |
-| `prompt-template` | Custom prompt for the AI. Use `{{commits}}`              | No       | Built-in template  |
+| `prompt-template` | Custom prompt for the AI. Use `{{commits}}` or `{{grouped_commits}}` | No      | Built-in template  |
 | `output-mode`     | Where to output the report (`pr_comment`)                | Yes      | `pr_comment`       |
 
 ## Outputs
