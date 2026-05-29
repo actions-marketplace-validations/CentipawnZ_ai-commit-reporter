@@ -21,7 +21,7 @@ export interface LlmOptions {
   locale?: string;
 }
 
-function groupCommits(commits: string[]): string {
+export function groupCommits(commits: string[]): string {
   const categories: Record<string, string[]> = {
     '🚀 Features': [],
     '🐛 Bug Fixes': [],
