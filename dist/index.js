@@ -34532,15 +34532,63 @@ var GoogleGenerativeAI = class {
 var DEFAULT_PROMPT = `
 You are an expert technical writer and software engineer.
 Summarize the following commit messages into a clear, structured release note or PR description.
-Group them by features, bug fixes, and chores if possible.
 
-Commits:
-{{commits}}
+Here is the list of categorized commits:
+{{grouped_commits}}
+
+Generate a beautiful, professional, and well-structured release report.
+Write the final report in the following language: {{locale}}.
 `;
+function groupCommits(commits) {
+  const categories = {
+    "\u{1F680} Features": [],
+    "\u{1F41B} Bug Fixes": [],
+    "\u26A1 Performance": [],
+    "\u{1F6E0}\uFE0F Refactoring": [],
+    "\u{1F4DD} Documentation": [],
+    "\u2699\uFE0F Chores & CI/CD": [],
+    "\u{1F4E6} Others": []
+  };
+  const commitRegex = /^(feat|fix|perf|refactor|docs|chore|style|test|ci|build)(?:\(([^)]+)\))?(!?):\s+(.+)$/i;
+  for (const commit of commits) {
+    const trimmed = commit.trim();
+    const firstLine = trimmed.split("\n")[0];
+    const match = firstLine.match(commitRegex);
+    if (match) {
+      const [, type, scope, isBreaking, message] = match;
+      const cleanType = type.toLowerCase();
+      const scopeStr = scope ? `**${scope}**: ` : "";
+      const breakingStr = isBreaking ? "\u26A0\uFE0F **BREAKING CHANGE** - " : "";
+      const formatted = `${breakingStr}${scopeStr}${message}`;
+      if (cleanType === "feat") categories["\u{1F680} Features"].push(formatted);
+      else if (cleanType === "fix") categories["\u{1F41B} Bug Fixes"].push(formatted);
+      else if (cleanType === "perf") categories["\u26A1 Performance"].push(formatted);
+      else if (cleanType === "refactor") categories["\u{1F6E0}\uFE0F Refactoring"].push(formatted);
+      else if (cleanType === "docs") categories["\u{1F4DD} Documentation"].push(formatted);
+      else if (["chore", "ci", "build", "style", "test"].includes(cleanType)) {
+        categories["\u2699\uFE0F Chores & CI/CD"].push(formatted);
+      } else {
+        categories["\u{1F4E6} Others"].push(firstLine);
+      }
+    } else {
+      categories["\u{1F4E6} Others"].push(firstLine);
+    }
+  }
+  let output = "";
+  for (const [category, items] of Object.entries(categories)) {
+    if (items.length > 0) {
+      output += `${category}:
+`;
+      output += items.map((item) => `- ${item}`).join("\n") + "\n\n";
+    }
+  }
+  return output.trim();
+}
 async function generateReport(commits, options) {
-  const commitList = commits.map((c) => `- ${c}`).join("\n");
+  const rawCommitList = commits.map((c) => `- ${c.split("\n")[0]}`).join("\n");
+  const groupedCommitList = groupCommits(commits);
   const template = options.customPrompt || DEFAULT_PROMPT;
-  const prompt = template.replace("{{commits}}", commitList);
+  const prompt = template.replace("{{commits}}", rawCommitList).replace("{{grouped_commits}}", groupedCommitList).replace("{{locale}}", options.locale || "English");
   const provider = options.provider.toLowerCase();
   if (provider === "openai" || provider === "custom") {
     const config = { apiKey: options.apiKey };
@@ -34572,6 +34620,7 @@ async function run() {
     const llmModel = getInput("llm-model");
     const llmBaseUrl = getInput("llm-base-url");
     const customPrompt = getInput("prompt-template");
+    const locale = getInput("locale");
     const outputMode = getInput("output-mode");
     const octokit = getOctokit(token);
     const context3 = context2;
@@ -34604,7 +34653,8 @@ async function run() {
       apiKey: llmApiKey,
       model: llmModel,
       baseUrl: llmBaseUrl,
-      customPrompt
+      customPrompt,
+      locale
     });
     setOutput("report", report);
     if (outputMode === "pr_comment" && context3.eventName === "pull_request") {

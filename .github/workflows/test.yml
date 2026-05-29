@@ -26,6 +26,22 @@ jobs:
           llm-base-url: ${{ secrets.LLM_BASE_URL }}
           llm-model: ${{ secrets.LLM_MODEL }}
           llm-api-key: ${{ secrets.LLM_API_KEY }}
+          locale: "Vietnamese"
+
+      - name: Escape Markdown for Telegram
+        id: escape
+        env:
+          RAW_REPORT: ${{ steps.ai-reporter.outputs.report }}
+        run: |
+          python3 -c '
+          import os
+          report = os.environ.get("RAW_REPORT", "")
+          # Các ký tự cần escape trong MarkdownV2 của Telegram
+          escape_chars = "_*[]()~`>#+-=|{}.!"
+          escaped = "".join(("\\" + c if c in escape_chars else c) for c in report)
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+              f.write("report<<EOF\n" + escaped + "\nEOF\n")
+          '
 
       - name: Send Telegram Notification
         if: ${{ steps.ai-reporter.outputs.report != '' }}
@@ -34,8 +50,8 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           chat_id: ${{ secrets.TELEGRAM_CHAT_ID }}
           topic_id: ${{ secrets.TELEGRAM_TOPIC_ID }}
-          format: 'Markdown'
+          format: 'MarkdownV2'
           message: |
             🤖 *AI Commit Report*
 
-            ${{ steps.ai-reporter.outputs.report }}
+            ${{ steps.escape.outputs.report }}

@@ -10,6 +10,7 @@ async function run(): Promise<void> {
     const llmModel = core.getInput('llm-model');
     const llmBaseUrl = core.getInput('llm-base-url');
     const customPrompt = core.getInput('prompt-template');
+    const locale = core.getInput('locale');
     const outputMode = core.getInput('output-mode');
 
     const octokit = github.getOctokit(token);
@@ -51,7 +52,8 @@ async function run(): Promise<void> {
       apiKey: llmApiKey,
       model: llmModel,
       baseUrl: llmBaseUrl,
-      customPrompt: customPrompt
+      customPrompt: customPrompt,
+      locale: locale
     });
 
     core.setOutput('report', report);
