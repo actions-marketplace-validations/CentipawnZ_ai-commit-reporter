@@ -1,0 +1,32 @@
+name: "AI Commit Reporter"
+description: "Summarize commit messages and generate reports using LLMs"
+branding:
+  icon: "edit"
+  color: "blue"
+inputs:
+  github-token:
+    description: "GitHub token for reading commits and commenting on PRs"
+    required: true
+  llm-provider:
+    description: "LLM provider (e.g., openai, gemini, custom)"
+    required: true
+    default: "openai"
+  llm-api-key:
+    description: "API Key for the chosen LLM provider"
+    required: true
+  llm-model:
+    description: "Model to use (e.g., gpt-4o-mini, gemini-1.5-flash)"
+    required: false
+  llm-base-url:
+    description: "Custom Base URL (useful for custom OpenAI-compatible endpoints)"
+    required: false
+  prompt-template:
+    description: "Custom prompt template. Available variables: {{commits}}"
+    required: false
+  output-mode:
+    description: "Where to output the report (pr_comment)"
+    required: true
+    default: "pr_comment"
+runs:
+  using: "node24"
+  main: "dist/index.js"
