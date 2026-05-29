@@ -81,8 +81,7 @@ export async function generateReport(
   const groupedCommitList = groupCommits(commits);
 
   const template = options.customPrompt || DEFAULT_PROMPT;
-  
-  // Hỗ trợ cả các biến {{commits}}, {{grouped_commits}}, và {{locale}}
+
   const prompt = template
     .replace('{{commits}}', rawCommitList)
     .replace('{{grouped_commits}}', groupedCommitList)
@@ -95,7 +94,7 @@ export async function generateReport(
     if (options.baseUrl) {
       config.baseURL = options.baseUrl;
     }
-    
+
     const openai = new OpenAI(config);
     const response = await openai.chat.completions.create({
       model: options.model || 'gpt-4o-mini',
